@@ -10,6 +10,7 @@ Loki::Loki()
     pinMode(LeftMotorDirPin1, OUTPUT);
     pinMode(LeftMotorDirPin2, OUTPUT);
     pinMode(speedPinR, OUTPUT);
+    
     pinMode(RightMotorDirPin1B, OUTPUT);
     pinMode(RightMotorDirPin2B, OUTPUT);
     pinMode(speedPinLB, OUTPUT);
@@ -17,6 +18,10 @@ Loki::Loki()
     pinMode(LeftMotorDirPin1B, OUTPUT);
     pinMode(LeftMotorDirPin2B, OUTPUT);
     pinMode(speedPinRB, OUTPUT);
+
+      /*init HC-SR04*/
+    pinMode(Trig_PIN, OUTPUT); 
+    pinMode(Echo_PIN,INPUT);
 
     stop_Stop();
 }
@@ -186,4 +191,18 @@ void Loki::stop_Stop() //Stop
     analogWrite(speedPinRB, 0);
     analogWrite(speedPinL, 0);
     analogWrite(speedPinR, 0);
+}
+
+int Loki::getCurrentDistance()
+{
+    long echo_distance;
+    digitalWrite(Trig_PIN, LOW);
+    delayMicroseconds(5);
+    digitalWrite(Trig_PIN, HIGH);
+    delayMicroseconds(15);
+    digitalWrite(Trig_PIN, LOW);
+    echo_distance = pulseIn(Echo_PIN, HIGH);
+    echo_distance = echo_distance * 0.01657; //how far away is the object in cm
+                                             //Serial.println((int)echo_distance);
+    return round(echo_distance);
 }

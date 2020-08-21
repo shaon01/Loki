@@ -28,6 +28,9 @@ private:
     int LeftMotorDirPin2B = 8;  //Rear left Motor direction pin 2 to Back MODEL-X IN4  k3
     int speedPinLB = 12;    //   LEFT WHEEL  PWM pin D8 connect Rear MODEL-X ENB
 
+    //ulatra sound pin
+    int Echo_PIN  =  31; // Ultrasonic Echo pin connect to A5
+    int Trig_PIN  =  30;  // Ultrasonic Trig pin connect to A4
     // private functions for driving actual robot
     void FR_bck(int speed);
     void FR_fwd(int speed);
@@ -57,6 +60,7 @@ public:
     void clockwise();
     void counterclockwise(int speed);
     void counterclockwise();
+    int getCurrentDistance();
 
 };
 
