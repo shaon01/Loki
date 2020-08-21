@@ -86,13 +86,30 @@ void loop()
     if (Car)
     {
       if (strcmp(Car, "Forward") == 0) //{"Car":"Forward"}
-        Serial.println("Got Forward \n");
+        {        
+          Serial.println("Got Forward \n");
+          evilLoki.go_advance(SPEED);
+        }
       else if (strcmp(Car, "Backward") == 0) //{"Car":"Backward"}
-        Serial.println("Got Backward \n");
+        {
+          Serial.println("Got Backward \n");
+          evilLoki.go_back(SPEED);
+        }
       else if (strcmp(Car, "Left") == 0) //{"Car":"Left"}
-        Serial.println("Got Left \n");
+        {
+          Serial.println("Got Left \n");
+          evilLoki.left_turn(TURN_SPEED);
+        }
       else if (strcmp(Car, "Right") == 0) //{"Car":"Right"}
+      {
         Serial.println("Got Right \n");
+        evilLoki.right_turn(TURN_SPEED);
+      }
+      else if (strcmp(Car, "Stop") == 0) //{"Car":"Right"}
+      {
+        Serial.println("Got Right \n");
+        evilLoki.stop_Stop();
+      }
     }
     // switch (c)    //serial control instructions
     // {
