@@ -44,6 +44,15 @@ void Loki::go_advance(int speed)
     FR_fwd(speed);
     FL_fwd(speed);
 }
+
+void Loki::go_advance()
+{
+    RL_fwd(deafultSpeed);
+    RR_fwd(deafultSpeed);
+    FR_fwd(deafultSpeed);
+    FL_fwd(deafultSpeed);
+}
+
 void Loki::go_back(int speed)
 {
     RL_bck(speed);
@@ -51,6 +60,15 @@ void Loki::go_back(int speed)
     FR_bck(speed);
     FL_bck(speed);
 }
+
+void Loki::go_back()
+{
+    RL_bck(deafultSpeed);
+    RR_bck(deafultSpeed);
+    FR_bck(deafultSpeed);
+    FL_bck(deafultSpeed);
+}
+
 void Loki::left_turn(int speed)
 {
     RL_bck(0);
@@ -87,13 +105,31 @@ void Loki::clockwise(int speed)
     FR_bck(speed);
     FL_fwd(speed);
 }
-void Loki::countclockwise(int speed)
+
+void Loki::clockwise()
+{
+    RL_fwd(deafultSpeed);
+    RR_bck(deafultSpeed);
+    FR_bck(deafultSpeed);
+    FL_fwd(deafultSpeed);
+}
+
+void Loki::counterclockwise(int speed)
 {
     RL_bck(speed);
     RR_fwd(speed);
     FR_fwd(speed);
     FL_bck(speed);
 }
+
+void Loki::counterclockwise()
+{
+    RL_bck(deafultSpeed);
+    RR_fwd(deafultSpeed);
+    FR_fwd(deafultSpeed);
+    FL_bck(deafultSpeed);
+}
+
 void Loki::FR_bck(int speed) //front-right wheel forward turn
 {
     digitalWrite(RightMotorDirPin1, LOW);

@@ -7,9 +7,9 @@
 class Loki
 {
 private:
-    int SPEED = 85;  
-    int TURN_SPEED = 90;
-    int SHIFT_SPEED =  130;  
+    int deafultSpeed        = 85;  
+    int deafultTrunSpeed    = 90;
+    int deafultShiftSpeed   =  130;  
 
     int TURN_TIME = 500;  
     int MOVE_TIME = 500; 
@@ -44,13 +44,19 @@ public:
     void right_shift(int speed_fl_fwd,int speed_rl_bck ,int speed_rr_fwd,int speed_fr_bck);
     void left_shift(int speed_fl_bck,int speed_rl_fwd ,int speed_rr_bck,int speed_fr_fwd);
     void go_advance(int speed);
+    void go_advance();
     void go_back(int speed);
+    void go_back();
     void left_turn(int speed);
+    void left_turn();
     void right_turn(int speed);
+    void right_turn();
     void left_back(int speed);
     void right_back(int speed);
     void clockwise(int speed);
-    void countclockwise(int speed);
+    void clockwise();
+    void counterclockwise(int speed);
+    void counterclockwise();
 
 };
 

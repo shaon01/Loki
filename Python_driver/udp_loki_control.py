@@ -7,11 +7,11 @@ bufferSize  = 1024
 udpLokiServer = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 udpLokiServer.bind(('',lokiPort))
 
-dataTosend = ['{"Car":"Forward"}','{"Car":"Backward"}','{"Car":"Left"}','{"Car":"Right"}','{"Car":"Stop"}']
+dataTosend = ['{"Car":"Forward","Speed":"100"}','{"Car":"Backward"}','{"Car":"Left"}','{"Car":"Right"}','{"Car":"Stop"}']
 
 for idx,val in enumerate(dataTosend):
     valToSend = str.encode(val)
     udpLokiServer.sendto(valToSend,(lokiIP,lokiPort))
-    time.sleep(1)
+    time.sleep(5)
 
 

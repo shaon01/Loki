@@ -83,27 +83,37 @@ void loop()
     Serial.println(packetBuffer);
     // checking the right vlue
     const char *Car = doc["Car"];
+    unsigned int setSpeed = doc["Speed"];
     if (Car)
     {
       if (strcmp(Car, "Forward") == 0) //{"Car":"Forward"}
         {        
           Serial.println("Got Forward \n");
-          evilLoki.go_advance(SPEED);
+          if (setSpeed)
+          {
+            evilLoki.go_advance(setSpeed);
+            Serial.print("moving with speed:");
+            Serial.println(setSpeed);
+          }
+          else
+          {
+            evilLoki.go_advance();
+          }
         }
       else if (strcmp(Car, "Backward") == 0) //{"Car":"Backward"}
         {
           Serial.println("Got Backward \n");
-          evilLoki.go_back(SPEED);
+          evilLoki.go_back();
         }
       else if (strcmp(Car, "Left") == 0) //{"Car":"Left"}
         {
           Serial.println("Got Left \n");
-          evilLoki.left_turn(TURN_SPEED);
+          evilLoki.counterclockwise();
         }
       else if (strcmp(Car, "Right") == 0) //{"Car":"Right"}
       {
         Serial.println("Got Right \n");
-        evilLoki.right_turn(TURN_SPEED);
+        evilLoki.clockwise();
       }
       else if (strcmp(Car, "Stop") == 0) //{"Car":"Right"}
       {
@@ -111,21 +121,6 @@ void loop()
         evilLoki.stop_Stop();
       }
     }
-    // switch (c)    //serial control instructions
-    // {
-    //   case 'A':evilLoki.go_advance(SPEED);break;
-    //   case 'L':evilLoki.left_turn(TURN_SPEED);break;
-    //   case 'R':evilLoki.right_turn(TURN_SPEED);break;
-    //   case 'B':evilLoki.go_back(SPEED);break;
-    //   case 'E':evilLoki.stop_Stop();break;
-    //   case 'F':evilLoki.left_shift(0,150,0,150);break; //left ahead
-    //   case 'H':evilLoki.right_shift(180,0,150,0);break; //right ahead
-    //   case 'I':evilLoki.left_shift(150,0,150,0); break;//left back
-    //   case 'K':evilLoki.right_shift(0,130,0,130); break;//right back
-    //   case 'O':evilLoki.left_shift(200,150,150,200); break;//left shift
-    //   case 'T':evilLoki.right_shift(200,200,200,200); break;//left shift
-    //   default:break;
-    // }
   }
 }
 
