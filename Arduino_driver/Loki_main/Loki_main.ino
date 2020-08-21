@@ -20,6 +20,10 @@ char packetBuffer[100];
 WiFiEspUDP Udp;
 unsigned int localPort = 8888;  // local port to listen on
 
+// for udp sendSensorData
+IPAddress remoteIp(192, 168, 10, 109);  // <- EDIT!!!!
+unsigned short remotePort = 8887;
+
 void setup()
 {
   Serial.begin(9600); // initialize serial for debugging
@@ -30,6 +34,7 @@ void setup()
   delay(200);
   Serial1.begin(9600); // initialize serial for ESP module
   WiFi.init(&Serial1); // initialize ESP module
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD)
@@ -52,7 +57,7 @@ void setup()
   Serial.println("You're connected to the network");
   printWifiStatus();
   Udp.begin(localPort);
-
+  digitalWrite(LED_BUILTIN, HIGH);
   Serial.print("Listening on port ");
   Serial.println(localPort);
 }
@@ -121,7 +126,10 @@ void loop()
         evilLoki.stop_Stop();
       }
     }
+    // sendSensorData();
   }
+
+  
 }
 
 void printWifiStatus()
@@ -140,4 +148,36 @@ void printWifiStatus()
   Serial.print("To see this page in action, open a browser to http://");
   Serial.println(ip);
   Serial.println();
+}
+
+void sendSensorData()
+{
+  StaticJsonDocument<500> doc;
+
+  // Create the "analog" array
+  JsonArray analogValues = doc.createNestedArray("Distance");
+  for (int pin = 0; pin < 10; pin++) {
+    // Read the analog input
+    int value = evilLoki.getCurrentDistance();
+
+    // Add the value at the end of the array
+    analogValues.add(value);
+  }
+
+  // Create the "digital" array
+  JsonArray digitalValues = doc.createNestedArray("digital");
+  for (int pin = 0; pin < 14; pin++) {
+    // Read the digital input
+    int value = pin;
+
+    // Add the value at the end of the array
+    digitalValues.add(value);
+  }
+
+  Udp.beginPacket(remoteIp, remotePort);
+  serializeJson(doc, Udp);
+  Udp.println();
+  Udp.endPacket();
+
+
 }
