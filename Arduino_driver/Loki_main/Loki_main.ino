@@ -4,6 +4,7 @@
 #include <WiFiEspUdp.h>
 
 #include <Loki.h>
+#include <ArduinoJson.h>
 
 #define SPEED 85    
 #define TURN_SPEED 90  
@@ -15,7 +16,7 @@ char ssid[] = "IP ON LAN :D IF WiFi Mad"; // replace ****** with your network SS
 char pass[] = "multiple#Omits0#bear"; // replace ****** with your network password
 int status = WL_IDLE_STATUS;
 // use a ring buffer to increase speed and reduce memory allocation
-char packetBuffer[5]; 
+char packetBuffer[100]; 
 WiFiEspUDP Udp;
 unsigned int localPort = 8888;  // local port to listen on
 
@@ -59,33 +60,57 @@ void setup()
 void loop()
 {
   int packetSize = Udp.parsePacket();
-  if (packetSize) {                               // if you get a client,
-     Serial.print("Received packet of size ");
+  if (packetSize)
+  { // if you get a client,
+    Serial.print("Received packet of size ");
     Serial.println(packetSize);
     int len = Udp.read(packetBuffer, 255);
-    if (len > 0) {
+    if (len > 0)
+    {
       packetBuffer[len] = 0;
     }
-      char c=packetBuffer[0];
-      switch (c)    //serial control instructions
-      {  
-        case 'A':evilLoki.go_advance(SPEED);break;
-        case 'L':evilLoki.left_turn(TURN_SPEED);break;
-        case 'R':evilLoki.right_turn(TURN_SPEED);break;
-        case 'B':evilLoki.go_back(SPEED);break;
-        case 'E':evilLoki.stop_Stop();break;
-        case 'F':evilLoki.left_shift(0,150,0,150);break; //left ahead
-        case 'H':evilLoki.right_shift(180,0,150,0);break; //right ahead
-        case 'I':evilLoki.left_shift(150,0,150,0); break;//left back
-        case 'K':evilLoki.right_shift(0,130,0,130); break;//right back
-        case 'O':evilLoki.left_shift(200,150,150,200); break;//left shift
-        case 'T':evilLoki.right_shift(200,200,200,200); break;//left shift
-        default:break;
-      }
-    }
-    
-}
+    StaticJsonDocument<512> doc;
+    DeserializationError error = deserializeJson(doc, packetBuffer);
 
+    if (error)
+    {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+      return;
+    }
+    // char c=packetBuffer[0];
+    Serial.print("Received Data :");
+    Serial.println(packetBuffer);
+    // checking the right vlue
+    const char *Car = doc["Car"];
+    if (Car)
+    {
+      if (strcmp(Car, "Forward") == 0) //{"Car":"Forward"}
+        Serial.println("Got Forward \n");
+      else if (strcmp(Car, "Backward") == 0) //{"Car":"Backward"}
+        Serial.println("Got Backward \n");
+      else if (strcmp(Car, "Left") == 0) //{"Car":"Left"}
+        Serial.println("Got Left \n");
+      else if (strcmp(Car, "Right") == 0) //{"Car":"Right"}
+        Serial.println("Got Right \n");
+    }
+    // switch (c)    //serial control instructions
+    // {
+    //   case 'A':evilLoki.go_advance(SPEED);break;
+    //   case 'L':evilLoki.left_turn(TURN_SPEED);break;
+    //   case 'R':evilLoki.right_turn(TURN_SPEED);break;
+    //   case 'B':evilLoki.go_back(SPEED);break;
+    //   case 'E':evilLoki.stop_Stop();break;
+    //   case 'F':evilLoki.left_shift(0,150,0,150);break; //left ahead
+    //   case 'H':evilLoki.right_shift(180,0,150,0);break; //right ahead
+    //   case 'I':evilLoki.left_shift(150,0,150,0); break;//left back
+    //   case 'K':evilLoki.right_shift(0,130,0,130); break;//right back
+    //   case 'O':evilLoki.left_shift(200,150,150,200); break;//left shift
+    //   case 'T':evilLoki.right_shift(200,200,200,200); break;//left shift
+    //   default:break;
+    // }
+  }
+}
 
 void printWifiStatus()
 {
