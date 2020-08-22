@@ -43,6 +43,21 @@ void lokiDriveDirection( const std_msgs::String& directionMsg){
     evilLoki.go_advance();
     nh.loginfo("Moving Robot Forward");
   }
+  else if (strcmp(directionMsg.data, "Backward") == 0) 
+  {
+    evilLoki.go_back();
+    nh.loginfo("Moving Robot Backward");
+  }
+  else if (strcmp(directionMsg.data, "Left") == 0) 
+  {
+    evilLoki.counterclockwise();
+    nh.loginfo("Moving Robot Left");
+  }
+  else if (strcmp(directionMsg.data, "Right") == 0)
+  {    
+    evilLoki.clockwise();
+    nh.loginfo("Moving Robot Right");
+  }
   else if (strcmp(directionMsg.data, "Stop") == 0) 
   {
     evilLoki.stop_Stop();
