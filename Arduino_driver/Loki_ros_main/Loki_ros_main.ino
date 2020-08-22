@@ -5,6 +5,7 @@
 
 #include <ros.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Int8.h>
 #include <Loki.h>
 
 ros::NodeHandle  nh;
@@ -16,13 +17,14 @@ void lokiDriveDirection( const std_msgs::String& directionMsg);
 ros::Subscriber<std_msgs::String> sub("Loki_drive_direction", lokiDriveDirection );
 
 // Publisher massage 
-std_msgs::String str_msg;
-ros::Publisher Sensor_value("Distance_sensor", &str_msg);
-char hello[13] = "hello world!";
+std_msgs::Int8 sensor_data;
+ros::Publisher Sensor_value("Distance_sensor", &sensor_data);
+void sendSenorData();
+
+long publisher_timer;
 
 void setup()
 {
-  pinMode(13, OUTPUT);
   nh.initNode();
   nh.advertise(Sensor_value);
   nh.subscribe(sub);
@@ -30,10 +32,14 @@ void setup()
 
 void loop()
 {
-  str_msg.data = hello;
-  Sensor_value.publish( &str_msg );
+  if (millis() > publisher_timer)
+  {
+    sendSenorData();
+    publisher_timer = millis() + 1000; //publish once a second
+  }
+  
   nh.spinOnce();
-  delay(500);
+  // delay(500);
 }
 
 void lokiDriveDirection( const std_msgs::String& directionMsg){
@@ -68,4 +74,13 @@ void lokiDriveDirection( const std_msgs::String& directionMsg){
   nh.loginfo("Got new data");
   nh.loginfo(directionMsg.data);
   
+}
+
+void sendSenorData()
+{
+
+  sensor_data.data = evilLoki.getCurrentDistance();
+
+  Sensor_value.publish(&sensor_data);
+
 }
