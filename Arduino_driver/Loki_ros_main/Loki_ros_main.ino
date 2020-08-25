@@ -69,7 +69,16 @@ void lokiDriveDirection( const std_msgs::String& directionMsg){
     evilLoki.stop_Stop();
     nh.loginfo("Stopping the robot");
   }
-
+  else if (strcmp(directionMsg.data, "R_shift") == 0) 
+  {
+    evilLoki.right_shift(200,200,200,200);
+    nh.loginfo("Shifting right the robot");
+  }
+  else if (strcmp(directionMsg.data, "L_shift") == 0)
+  {
+    evilLoki.left_shift(200,150,150,200);
+    nh.loginfo("Shifting right the robot");
+  }
   
   nh.loginfo("Got new data");
   nh.loginfo(directionMsg.data);
